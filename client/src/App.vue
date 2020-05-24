@@ -1,9 +1,11 @@
 <template>
   <div id="app">
     <el-container>
-      <el-aside width="200px">Aside</el-aside>
+      <el-aside width="200px">
+        <Nav></Nav>
+      </el-aside>
       <el-container>
-        <el-header>Header</el-header>
+        <!--<el-header>Header</el-header>-->
         <el-main>Main</el-main>
       </el-container>
     </el-container>
@@ -11,12 +13,12 @@
 </template>
 
 <script>
-//import HelloWorld from './components/HelloWorld.vue'
+import Nav from './components/Nav.vue'
 
 export default {
   name: 'App',
   components: {
-    //HelloWorld
+    Nav
   }
 }
 </script>

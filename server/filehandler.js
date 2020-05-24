@@ -20,6 +20,7 @@ let listImages = (dir) => {
         'path': dir,
         'name': dirName(dir),
         'imgs': [],
+        'total': 0,
         'child': [],
     };
 
@@ -38,6 +39,7 @@ let listImages = (dir) => {
             }
         }
     });
+    res['total'] = res['imgs'].length;
     return res;
 }
 
