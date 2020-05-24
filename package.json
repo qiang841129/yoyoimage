@@ -1,0 +1,18 @@
+{
+  "name": "yoyoimage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node app.js",
+    "pkg": "pkg . -t node10-macos-x64 -o app"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
