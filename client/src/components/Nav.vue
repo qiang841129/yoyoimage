@@ -16,7 +16,8 @@ export default {
         data: [],
         defaultProps: {
           children: 'child',
-          label: 'name'
+          label: 'name',
+          total: 'total',
         }
       };
     },
@@ -31,10 +32,8 @@ export default {
       rendrContent(h, {node}) {
         return (
           <span class="custom-tree-node">
-            <span>{ node.label }</span>
-            <span>
-              <el-button size="mini" type="text">{node.total}</el-button>
-            </span>
+            <span>{ node.data.name }</span>
+            <span class="tips">{ node.data.total }</span>
           </span>
         );
       },
@@ -52,13 +51,17 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 .custom-tree-node {
   flex: 1;
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+}
+.custom-tree-node .tips {
+  float: right;
 }
 </style>
