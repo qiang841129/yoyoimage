@@ -1,7 +1,7 @@
 const path = require('path');
 const os = require('os');
 const express = require('express');
-const filehandler = require('./server/filehandler');
+const filehandler = require('./filehandler');
 
 const app = express();
 
