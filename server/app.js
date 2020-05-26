@@ -30,6 +30,12 @@ app.get('/img/', (req, res) => {
         ext = ext.substr(1);
     }
     fs.readFile(file, (err, data) => {
+        if (err) {
+            console.log(err);
+            res.writeHead(404);
+            res.end();
+            return;
+        }
         res.writeHead(200, {'Content-Type': 'image/' + ext});
         let stream = fs.createReadStream(file);
         if (stream) {

@@ -5,17 +5,19 @@
         <el-tree
           :data="data"
           :props="defaultProps"
-          @node-click="handleNodeClick"
-          :render-content="rendrContent">
+          @node-click="clickNav"
+          :render-content="renderNav">
         </el-tree>
       </el-aside>
-      <div id="detail_main">
+      <div id="detail_main" ref="detail_main">
         <div id="detail_nav">
-          <el-radio-group v-model="detail_list_style" disabled size="mini">
+          <el-radio-group
+            v-model="detail_list_style"
+            size="mini"
+            @change="changeStyle">
             <el-radio-button label="小"></el-radio-button>
             <el-radio-button label="中"></el-radio-button>
             <el-radio-button label="大"></el-radio-button>
-            <el-radio-button label="最大"></el-radio-button>
           </el-radio-group>
         </div>
         <div id="detail_content" v-if="detail_cnt > 0">
@@ -23,12 +25,13 @@
             <h2>{{ detail_name }}</h2>
             <span>共 {{ detail_cnt }} 项</span>
           </div>
-          <el-row>
-            <el-col :span="6" v-for="item in detail_imgs" :key="item">
+          <el-row v-for="(row, idx) in detail_imgs" :key="idx" :gutter="20">
+            <el-col :span="detail_col_span" v-for="(item, idx) in row" :key="idx">
               <el-image
                 fit="cover"
                 :src="item"
-                :preview-src-list="detail_imgs"></el-image>
+                :preview-src-list="detail_big_imgs"
+                :style="{height: detail_img_height + 'px'}"></el-image>
             </el-col>
           </el-row>
         </div>
@@ -51,33 +54,75 @@ export default {
         label: 'name',
         total: 'total',
       },
-      detail_list_style: '最大',
+      detail_list_style: '大',
 
       detail_name: '',
       detail_cnt: 0,
       detail_imgs: [],
+      detail_data: null,
+      detail_big_imgs: [],
+      detail_col_span: 0,
+      detail_img_height: 0,
     };
   },
   created() {
     this.getData();
   },
+  mounted() {
+    var _this = this;
+    window.onresize = function() {
+      _this.changeStyle(_this.detail_list_style);
+    }
+  },
   methods: {
-    handleNodeClick(data) {
+    clickNav(data) {
       this.detail_cnt = data.imgs.length;
       this.detail_name = data.name;
-      this.detail_imgs = [];
-      for (var i = 0; i < data.imgs.length; ++i) {
-        this.detail_imgs.push('http://localhost:3000/img/?path=' + data.path + '/' + data.imgs[i]);
-      }
+      this.detail_data = data;
+      this.setDetailImgs(this.detail_list_style);
     },
 
-    rendrContent(h, {node}) {
+    renderNav(h, {node}) {
       return (
         <span class="custom-tree-node">
           <span>{ node.data.name }</span>
           <span class="tips">{ node.data.total }</span>
         </span>
       );
+    },
+
+    changeStyle(style) {
+      this.detail_list_style = style;
+      this.setDetailImgs(style);
+    },
+
+    setDetailImgs(style) {
+      this.detail_imgs = [];
+      this.detail_big_imgs = [];
+      var imgs = this.detail_data.imgs;
+      var col_cnt = {'小': 8, '中': 6, '大': 4}[style];
+      var row_cnt = Math.ceil(imgs.length / col_cnt);
+
+      this.detail_img_height = parseInt(window.getComputedStyle(this.$refs.detail_main).width) / col_cnt;
+      this.detail_col_span = 24 / col_cnt;
+      for (var r = 0; r < row_cnt; ++r) {
+        var t = [];
+        for (var c = 0; c < col_cnt; ++c) {
+          var img = imgs[r * col_cnt + c];
+          if (img !== undefined) {
+            var img_url = 'http://localhost:3000/img/?path=' + this.detail_data.path + '/' + img;
+            t.push(img_url);
+            this.detail_big_imgs.push(img_url);
+          } else {
+            break;
+          }
+        }
+        if (t.length > 0) {
+          this.detail_imgs.push(t);
+        } else {
+          break;
+        }
+      }
     },
 
     getData() {
@@ -154,6 +199,12 @@ export default {
   margin-top: 8px;
   font-size: 12px;
   vertical-align: bottom;
+}
+.el-row {
+  margin-bottom: 20px;
+}
+.el-row:last-child {
+  margin-bottom: 0;
 }
 .el-col .el-image {
   display: block;
