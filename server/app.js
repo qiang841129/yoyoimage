@@ -2,6 +2,7 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 const express = require('express');
+const {exec} = require('child_process');
 const filehandler = require('./filehandler');
 
 const app = express();
@@ -18,9 +19,11 @@ app.all('*', (req, res, next) => {
     }
 })
 
+app.use(express.static(path.resolve(__dirname, '../client/dist/')));
 
 app.get('/', (req, res) => {
-    res.send('Hello express');
+    const html = fs.readFileSync(path.resolve(__dirname, '../client/dist/index.html'), 'utf-8');
+    res.send(html);
 })
 
 app.get('/img/', (req, res) => {
@@ -60,4 +63,14 @@ app.get('/api/img/list/', (req, res) => {
     });
 })
 
-app.listen(3000);
+const port = 8060;
+app.listen(port, () => {
+    switch (process.platform) {
+        case 'darwin':
+            exec(`open http://localhost:${port}`);
+        case 'win32':
+            exec(`start http://localhost:${port}`);
+        default:
+            exec(`open http://localhost:${port}`);
+    }
+});

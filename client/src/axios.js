@@ -28,6 +28,6 @@ instance.interceptors.response.use(
 
 export default {
     imageList() {
-        return instance.get('http://127.0.0.1:3000/api/img/list/');
+        return instance.get('/api/img/list/');
     }
 }

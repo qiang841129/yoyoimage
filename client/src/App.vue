@@ -110,7 +110,7 @@ export default {
         for (var c = 0; c < col_cnt; ++c) {
           var img = imgs[r * col_cnt + c];
           if (img !== undefined) {
-            var img_url = 'http://localhost:3000/img/?path=' + this.detail_data.path + '/' + img;
+            var img_url = '/img/?path=' + this.detail_data.path + '/' + img;
             t.push(img_url);
             this.detail_big_imgs.push(img_url);
           } else {
