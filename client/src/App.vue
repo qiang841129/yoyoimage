@@ -213,10 +213,12 @@ export default {
 }
 #detail_content {
   width: 100%;
+  height: calc(100% - 30px);
   overflow: auto;
   box-sizing: border-box;
   margin-top: 4px;
   overflow: hidden;
+  overflow-y: auto;
 }
 #detail_content .header {
   width: 100%;
