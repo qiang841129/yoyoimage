@@ -34,7 +34,10 @@ let listImages = (dir) => {
             res['child'].push(listImages(file));
         } else {
             if (isImage(file)) {
-                res['imgs'].push(item);
+                res['imgs'].push({
+                    'name': item,
+                    'mtime': stat.mtimeMs,
+                });
             }
         }
     });

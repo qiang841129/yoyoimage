@@ -56,7 +56,7 @@ app.get('/img/', (req, res) => {
 })
 
 app.get('/api/img/list/', (req, res) => {
-    let imgs = filehandler.listImages(path.join(os.homedir(), 'Documents/work/familycenter/data/img'));
+    let imgs = filehandler.listImages(path.join(os.homedir(), 'Documents/bak/img'));
     res.json({
         status: 0,
         imgs: [imgs]
@@ -68,9 +68,12 @@ app.listen(port, () => {
     switch (process.platform) {
         case 'darwin':
             exec(`open http://localhost:${port}`);
+            break;
         case 'win32':
             exec(`start http://localhost:${port}`);
+            break;
         default:
             exec(`open http://localhost:${port}`);
+            break;
     }
 });

@@ -10,7 +10,7 @@
         </el-tree>
       </el-aside>
       <div id="detail_main" ref="detail_main">
-        <div id="detail_nav">
+        <div id="detail_nav" v-if="detail_cnt > 0">
           <el-radio-group
             v-model="detail_list_style"
             size="mini"
@@ -19,6 +19,16 @@
             <el-radio-button label="中"></el-radio-button>
             <el-radio-button label="大"></el-radio-button>
           </el-radio-group>
+
+          <el-dropdown @command="chgSortType">
+            <span class="el-dropdown-link">
+              {{ sort_type }}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="修改时间">修改时间</el-dropdown-item>
+              <el-dropdown-item command="名称">名称</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
         <div id="detail_content" v-if="detail_cnt > 0">
           <div class="header">
@@ -63,6 +73,8 @@ export default {
       detail_big_imgs: [],
       detail_col_span: 0,
       detail_img_height: 0,
+
+      sort_type: '修改时间'
     };
   },
   created() {
@@ -79,6 +91,11 @@ export default {
       this.detail_cnt = data.imgs.length;
       this.detail_name = data.name;
       this.detail_data = data;
+      this.setDetailImgs(this.detail_list_style);
+    },
+
+    chgSortType(sort_type) {
+      this.sort_type = sort_type;
       this.setDetailImgs(this.detail_list_style);
     },
 
@@ -103,6 +120,23 @@ export default {
       var col_cnt = {'小': 8, '中': 6, '大': 4}[style];
       var row_cnt = Math.ceil(imgs.length / col_cnt);
 
+      // 排序
+      if (this.sort_type == '名称') {
+        imgs = imgs.sort(function(a, b) {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        })
+      } else {
+        imgs = imgs.sort(function(a, b) {
+          return b.mtime - a.mtime;
+        })
+      }
+
       this.detail_img_height = parseInt(window.getComputedStyle(this.$refs.detail_main).width) / col_cnt;
       this.detail_col_span = 24 / col_cnt;
       for (var r = 0; r < row_cnt; ++r) {
@@ -110,7 +144,7 @@ export default {
         for (var c = 0; c < col_cnt; ++c) {
           var img = imgs[r * col_cnt + c];
           if (img !== undefined) {
-            var img_url = '/img/?path=' + this.detail_data.path + '/' + img;
+            var img_url = '/img/?path=' + this.detail_data.path + '/' + img.name;
             t.push(img_url);
             this.detail_big_imgs.push(img_url);
           } else {
@@ -144,6 +178,13 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: calc(100vh - 28px);
+}
+#app>.el-container {
+  height: 100%;
+}
+.el-aside {
+  border-right: 1px solid #efefef;
 }
 .custom-tree-node {
   flex: 1;
@@ -215,5 +256,8 @@ export default {
 .el-col .el-image img {
   margin-right: 4px;
   margin-bottom: 4px;
+}
+#detail_nav .el-dropdown {
+  float: right;
 }
 </style>
