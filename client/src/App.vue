@@ -32,8 +32,11 @@
         </div>
         <div id="detail_content" v-if="detail_cnt > 0">
           <div class="header">
-            <h2>{{ detail_name }}</h2>
-            <span>共 {{ detail_cnt }} 项</span>
+            <h2>
+              {{ detail_name }}
+              <span>共 {{ detail_cnt }} 项</span>
+            </h2>
+
           </div>
           <el-row v-for="(row, idx) in detail_imgs" :key="idx" :gutter="20">
             <el-col :span="detail_col_span" v-for="(item, idx) in row" :key="idx">
@@ -234,14 +237,14 @@ export default {
   margin-right: 8px;
   font-weight: 400;
 }
-#detail_content .header span {
-  display: inline-block;
-  float: left;
-  height: 16px;
-  line-height: 16px;
-  margin-top: 8px;
-  font-size: 12px;
-  vertical-align: bottom;
+#detail_content .header h2 span {
+  font-size: 14px;
+  margin-left: 8px;
+}
+#detail_content .header h2 i {
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 4px;
 }
 .el-row {
   margin-bottom: 20px;
