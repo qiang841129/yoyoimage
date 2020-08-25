@@ -20,6 +20,8 @@
             <el-radio-button label="大"></el-radio-button>
           </el-radio-group>
 
+          <el-button size="mini" @click="dialogVisible = true">自动播放</el-button>
+
           <el-dropdown @command="chgSortType">
             <span class="el-dropdown-link">
               {{ sort_type }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -42,6 +44,7 @@
             <el-col :span="detail_col_span" v-for="(item, idx) in row" :key="idx">
               <el-image
                 fit="cover"
+                lazy
                 :src="item"
                 :preview-src-list="detail_big_imgs"
                 :style="{height: detail_img_height + 'px'}"></el-image>
@@ -50,6 +53,18 @@
         </div>
       </div>
     </el-container>
+
+    <el-dialog
+      :visible.sync="dialogVisible"
+      width="100%"
+      :before-close="handleClose">
+      <el-carousel height="calc(100vh - 40px)" indicator-position="none">
+        <el-carousel-item v-for="item in detail_big_imgs" :key="item">
+          <img :src="item"/>
+        </el-carousel-item>
+      </el-carousel>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -77,7 +92,9 @@ export default {
       detail_col_span: 0,
       detail_img_height: 0,
 
-      sort_type: '修改时间'
+      sort_type: '修改时间',
+
+      dialogVisible: false
     };
   },
   created() {
@@ -264,5 +281,18 @@ export default {
 }
 #detail_nav .el-dropdown {
   float: right;
+}
+.el-icon-circle-close {
+  color: #fff !important;
+}
+.el-dialog {
+  margin: 0 !important;
+}
+.el-dialog__body {
+  padding: 0 !important;
+}
+.el-dialog img {
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>
